@@ -22,7 +22,7 @@ exports.login = async (data) => {
 
         console.log("Login success: "+ user.name + " "+user.surname)
 
-        return {result: "Success", user: {email, token},date: new Date()};
+        return {result: "Success", user: {email, token, name: user.name, surname: user.surname},date: new Date()};
 
     } catch(error){
         throw new Error(error.message);
