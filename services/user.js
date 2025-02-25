@@ -58,7 +58,7 @@ const getAllUser = async() => {
 const deleteUser = async(id) =>{
     try{
 
-        const deletedUser = await User.findByIdAndDelete(id);
+        const deletedUser = await User.findByIdAndDelete(id.id);
 
         if(!deletedUser){
             throw new Error('delete user error');
