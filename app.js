@@ -4,6 +4,7 @@ const connectDB = require('./config/dbConnection')
 const { initAdmin } = require('./initilization/adminInitilization'); // Doğru yol
 const authenticationRoute = require('./routes/authentication');
 const userRoute = require('./routes/user');
+const categoryRoute = require('./routes/category')
 const cors = require('cors');
 
 connectDB();
@@ -16,6 +17,7 @@ app.use(cors({ origin: 'http://localhost:3000' }));
 
 app.use('/auth',authenticationRoute);
 app.use('/user',userRoute);
+app.use('/category',categoryRoute);
 
 app.listen(4000, () => {
   console.log('Server running with 4000 ports.');

@@ -15,7 +15,7 @@ exports.login = async (data) => {
         if(!isMatch){
             throw new Error('Invalid password');
         }
-        const token = jwt.sign({email, role: user.role, date: new Date(),_id:user._id}, 'zeynep');
+        const token = jwt.sign({email, role: user.role, date: new Date(),_id:user._id}, 'zeynep', { expiresIn: '1h' });
         if(!token){
             throw new Error("JWT sign error");
         }
