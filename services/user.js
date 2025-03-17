@@ -3,10 +3,10 @@ const User = require('../models/User');
 
 const createUser = async(data) => {
     try{
-        const {name,email,surname,password} = data;
+        const {name,email,surname,password,role} = data;
 
-        if(!name || !email || !surname || !password){
-            throw new Error('name, email, surname and password are required!')
+        if(!name || !email || !surname || !password || !role){
+            throw new Error('name, email, surname, role and password are required!')
         }
 
         const hashedPassword = await bcrypt.hash(password,10);
@@ -17,12 +17,17 @@ const createUser = async(data) => {
             throw new Error('This email already exits!')
         }
 
+
+        if((role !== "user") && (role !== "vendor")){
+            throw new Error('Role must be only user or vendor');
+        }
+
         const newUser = new User({
             email: email,
             name: name,
             password: hashedPassword,
             surname: surname,
-            role:"user"
+            role:role,
         })
 
         await newUser.save();

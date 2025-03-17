@@ -3,8 +3,8 @@ const {createUser, getUserByID, getAllUser, deleteUser, updateUser} = require('.
 exports.createUser = async (req,res) => {
     
     try{
-        const {name,surname,email,password} = req.body;
-        const result = await createUser({name,surname,email,password})
+        const {name,surname,email,password,role} = req.body;
+        const result = await createUser({name,surname,email,password,role})
 
         res.status(200).json(result);
 
