@@ -5,6 +5,7 @@ const { initAdmin } = require('./initilization/adminInitilization'); // Doğru y
 const authenticationRoute = require('./routes/authentication');
 const userRoute = require('./routes/user');
 const categoryRoute = require('./routes/category')
+const restaurantRoute = require('./routes/restaurant');
 const cors = require('cors');
 
 connectDB();
@@ -18,6 +19,7 @@ app.use(cors({ origin: 'http://localhost:3000' }));
 app.use('/auth',authenticationRoute);
 app.use('/user',userRoute);
 app.use('/category',categoryRoute);
+app.use('/restaurant',restaurantRoute);
 
 app.listen(4000, () => {
   console.log('Server running with 4000 ports.');

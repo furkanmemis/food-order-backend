@@ -46,4 +46,20 @@ const verifyUser = (req,res,next) => {
     }
 }
 
-module.exports = {verifyAdmin, verifyUser}
+const verifyVendor = (req,res,next) =>{
+    try{
+        const user = req.user;
+
+        if(user.role !== "vendor"){
+            return res.status(401).json({"result":"Vendor only make this"})
+        
+        }
+
+        next();
+
+    }catch(error){
+        return res.status(500).json({"vendor verify error": error});
+    }
+}
+
+module.exports = {verifyAdmin, verifyUser, verifyVendor}
