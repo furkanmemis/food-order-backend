@@ -1,10 +1,12 @@
 const Category = require("../models/Category");
 
 
-const createCategory = async (name) => {
+const createCategory = async (body) => {
   try {
-    if (!name) {
-      throw new Error("Name is neccessary for category");
+    const name = body.name;
+    const image = body.image;
+    if (!name || ! image) {
+      throw new Error("Name and image is neccessary for category");
     }
 
     const existCategory = await Category.findOne({ name: name });
@@ -13,7 +15,7 @@ const createCategory = async (name) => {
       throw new Error("Category name already exist");
     }
 
-    const newCategory = new Category({ name: name });
+    const newCategory = new Category({ name: name, image });
 
     newCategory.save();
 

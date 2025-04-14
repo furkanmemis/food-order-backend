@@ -4,20 +4,17 @@ const {
   getCategoryById,
   deleteCategory,
   updateCategory,
-  uploadImages,
-  getCategoryImage,
-  deleteImage
 } = require("../services/category");
 
 exports.create = async (req, res) => {
   try {
-    const name = req.body.name;
+    const body = req.body;
 
-    if (!name) {
-      res.status(404).json({ "Category Error ": "Category name is not found" });
+    if (!body) {
+      res.status(404).json({ "Category Error ": "Category body is not found" });
     }
 
-    const result = await createCategory(name);
+    const result = await createCategory(body);
 
     res.status(200).json(result);
   } catch (error) {
