@@ -5,7 +5,8 @@ const Restaurant = new mongoose.Schema({
   address: { type: String, required: true },
   categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   vendorInformation: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-  type: {type: String, required: true, default: "local" }
+  type: {type: String, required: true, default: "local" },
+  image: {type: String, required: true, default: ""}
 });
 
 module.exports = mongoose.model('Restaurant', Restaurant);

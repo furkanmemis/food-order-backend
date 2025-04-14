@@ -4,7 +4,7 @@ const User = require("../models/User");
 
 const create = async (data, userId) => {
   try {
-    const { name, address, categories, type } = data;
+    const { name, address, categories, type, image } = data;
 
     if (!name || !address || !categories) {
       throw new Error("name and address is required.");
@@ -26,6 +26,7 @@ const create = async (data, userId) => {
       categories,
       vendorInformation: userId,
       type,
+      image
     });
 
     await newRestaurant.save();
@@ -49,7 +50,7 @@ const getAll = async () => {
     let restaurants = [];
 
     for (const rest of allRestaurant) {
-      let { name, address, categories, vendorInformation, _id, type } = rest;
+      let { name, address, categories, vendorInformation, _id, type, image } = rest;
 
       let categoryDocs = await Category.find(
         { _id: { $in: categories } },
@@ -66,6 +67,7 @@ const getAll = async () => {
         categories: categoryNames,
         vendorInformation: vendor,
         type,
+        image,
       });
     }
 
@@ -87,7 +89,7 @@ const getById = async (id) => {
       return {};
     }
 
-    let { name, address, vendorInformation, categories, type } = restaurant;
+    let { name, address, vendorInformation, categories, type, image } = restaurant;
 
     let categoryDocs = await Category.find(
       { _id: { $in: categories } },
@@ -112,7 +114,8 @@ const getById = async (id) => {
       address,
       vendorInformation: vendor,
       categories: categoryNames,
-      type
+      type,
+      image
     };
   } catch (error) {
     throw new Error("Restaurant get by id error: " + error);
