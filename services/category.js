@@ -1,7 +1,5 @@
 const Category = require("../models/Category");
-const Image = require("../models/Image");
-const fs = require("fs");
-const path = require("path");
+
 
 const createCategory = async (name) => {
   try {
@@ -108,84 +106,6 @@ const updateCategory = async (data, id) => {
   }
 };
 
-const uploadImages = async (file,categoryId) => {
-  try {
-
-    const existCategoryImage = await Image.findOne({categoryId});
-
-    if(existCategoryImage){
-      throw new Error('This category have a image')
-    }
-
-    const img = new Image({
-      name: file.originalname,
-      img: {
-        data: fs.readFileSync(file.path),
-        contentType: file.mimetype,
-      },
-      categoryId,
-    });
-
-    const imagePath = path.resolve(file.path); // Kesin dosya yolu
-
-    fs.unlink(imagePath, (err) => {
-      if (err) console.error("Temp File Not Delete:", err);
-      else console.log(`Deleted: ${file.filename}`);
-    });
-
-  
-
-    const saved = await img.save();
-
-    let data = {
-      imageId: img._id
-    }
-
-    const updatedCategory = await Category.findByIdAndUpdate(
-      { _id: categoryId },
-      data
-    );
-
-    if(!updatedCategory){
-      throw new Error('Image upload error - category')
-    }
-    return saved;
-  } catch (error) {
-    throw new Error("Category image upload error " + error.message);
-  }
-};
-
-
-const getCategoryImage = async(id) =>{
-  try{
-
-    if(!id){
-      throw new Error("id must be in");
-    }
-    const image = await Image.findOne({_id:id});
-    return image;
-    
-  }catch(error){
-    throw new Error(error.message);
-  }
-};
-
-const deleteImage = async(id) =>{
-  try{
-
-    if(!id){
-      throw new Error('id must be in');
-    }
-
-    const img = await Image.deleteOne({_id:id})
-
-    return img;
-
-  }catch(error){
-    throw new Error('Delete Image Error: '+error.message)
-  }
-
-}
 
 
 module.exports = {
@@ -194,7 +114,4 @@ module.exports = {
   getCategoryById,
   deleteCategory,
   updateCategory,
-  uploadImages,
-  getCategoryImage,
-  deleteImage
 };

@@ -12,9 +12,6 @@ router.get('/get-all-category',verifyJWT,getAll);
 router.get('/get-category/:id',verifyJWT,getByID);
 router.delete('/delete-category/:id',verifyJWT,verifyAdmin,categoryDelete)
 router.put('/update-category/:id',verifyJWT,verifyAdmin,categoryUpdate);
-router.post('/image-upload/:id',verifyJWT,verifyAdmin,upload.single('image'),uploadImage);
-router.get('/get-image/:id',verifyJWT,verifyAdmin,getImage);
-router.delete('/delete-image/:id',verifyJWT,verifyAdmin,deleteImage);
 
 
 
