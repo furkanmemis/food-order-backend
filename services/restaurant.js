@@ -1,6 +1,8 @@
 const Restaurant = require("../models/Restaurant");
 const Category = require("../models/Category");
 const User = require("../models/User");
+const RestaurantCategory = require('../models/RestaurantCategory');
+const RestaurantFood = require("../models/RestaurantFood");
 
 const create = async (data, userId) => {
   try {
@@ -122,4 +124,124 @@ const getById = async (id) => {
   }
 };
 
-module.exports = { create, getAll, getById };
+const createRestaurantCategory = async (data) =>{
+
+  try{
+
+    const restaurantId = data.restaurantId;
+    const name = data.name;
+
+    const currentRestaurant = await Restaurant.findOne({_id: restaurantId});
+
+    if(!currentRestaurant){
+      throw new Error('Any restaurant find with this id '+restaurantId);
+    }
+
+    if(!name){
+      throw new Error('Restaurant category must have name');
+    }
+
+
+    const newRestaurantCategory = new RestaurantCategory({name, restaurantId});
+    await newRestaurantCategory.save();
+
+    console.log(name + " restaurant category is created");
+
+
+    return {result: "Success"};
+
+  }catch(error){
+    throw new Error('Restaurant Category create error '+ error.message);
+  }
+
+};
+
+const getAllRestaurantCategory = async(restaurantId)=>{
+
+  try{
+
+    const currentRestaurant = await Restaurant.findOne({_id:restaurantId});
+
+    if(!currentRestaurant){
+      throw new Error('Any restaurant not found with this id '+restaurantId);
+    }
+
+    const allCategory = await RestaurantCategory.find({restaurantId: restaurantId});
+
+
+    if(!allCategory || allCategory.length === 0){
+      return [];
+    }
+
+    return allCategory;
+
+  }catch(error){
+    throw new Error('Get all restaurant category error  '+ error.message);
+  }
+
+};
+
+const createRestaurantFood = async(data) =>{
+  try{
+
+    const {name, price, restaurantId, restaurantCategoryId} = data;
+
+    if(!name || !price || !restaurantId || !restaurantCategoryId){
+      throw new Error('Name, price, restaurantId and restaurantCategoryId must be in body');
+    }
+
+    const existRestaurant = await Restaurant.findOne({_id:restaurantId});
+    if(!existRestaurant){
+      throw new Error('Any restaurant not found with this id '+restaurantId);
+    }
+
+    const existRestaurantCategory = await RestaurantCategory.findOne({_id:restaurantCategoryId});
+    if(!existRestaurantCategory){
+      throw new Error('Any restaurant category not found with this id '+restaurantCategoryId);
+    }
+
+    const newRestaurantFood = new RestaurantFood({name,price,restaurantCategoryId,restaurantId});
+
+    await newRestaurantFood.save();
+
+    console.log("Restaurant food created "+name);
+
+    return {result: "Success"};
+    
+  }catch(error){
+    throw new Error('Create restaurant food error '+error.message);
+  }
+};
+
+const getAllRestaurantFood = async(data) => {
+  try{
+
+    const {restaurantId} = data;
+
+    const allFood = await RestaurantFood.find({restaurantId});
+
+    if(!allFood || allFood.length === 0){
+      return [];
+    }
+
+    let foods = [];
+
+    for(const food of allFood){
+      const {name,price,restaurantId, restaurantCategoryId} = food;
+      
+      const restaurant = await Restaurant.findOne({_id:restaurantId}).select("name _id");
+      const restaurantCategory = await RestaurantCategory.findOne({_id:restaurantCategoryId}).select("name _id");
+
+      let f = {name,price,restaurant,restaurantCategory};
+
+      foods.push(f);
+    }
+
+    return foods;
+
+  }catch(error){
+    throw new Error('Get all restaurant food error '+error.message);
+  }
+}
+
+module.exports = { create, getAll, getById, createRestaurantCategory, getAllRestaurantCategory, createRestaurantFood, getAllRestaurantFood };
