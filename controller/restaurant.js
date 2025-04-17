@@ -1,4 +1,4 @@
-const {create,getAll,getById, createRestaurantCategory, getAllRestaurantCategory, createRestaurantFood, getAllRestaurantFood} = require('../services/restaurant');
+const {create,getAll,getById, createRestaurantCategory, getAllRestaurantCategory, createRestaurantFood, getAllRestaurantFood, deleteRestaurantFood, deleteRestaurantCategory} = require('../services/restaurant');
 
 exports.createRestaurant = async(req,res) =>{
     
@@ -118,4 +118,52 @@ exports.getAllRestaurantFood = async(req,res) =>{
     }catch(error){
         res.status(500).json({error: "Get all restaurant food error "+ error.message});
     }
-}
+};
+
+
+exports.deleteRestaurantFood = async (req,res) => {
+    try{
+
+        const id = req.params.id;
+        const restaurantId = req.body.restaurantId;
+
+        if(!id){
+            res.status(400).json({message: "Id should be have"})
+        }
+
+        const result = await deleteRestaurantFood(id, restaurantId);
+
+        res.status(200).json(result);
+
+    }catch(error){
+        res.status(500).json({"Restaurant food delete" :error.message})
+    }
+};
+
+exports.deleteRestaurantCategory = async(req,res) =>{
+    
+    try{
+
+        const id = req.params.id;
+        const restaurantId = req.body.restaurantId;
+        console.log("id -> "+id)
+        console.log("restaurandId -> "+restaurantId)
+
+    
+        if(!id || !restaurantId){
+            res.status(404).json({message:"Id and restaurant id should be"})
+        }
+    
+        const result = await deleteRestaurantCategory(id,restaurantId);
+
+        if(!result){
+            res.status(400).json({error:"Restaurant result error"})
+        }
+
+        res.status(200).json(result);
+
+    }catch(error){
+        res.status(500).json({"Restaurant category delete error ":error.message});
+    }
+
+};

@@ -1,5 +1,5 @@
 const express = require('express');
-const {createRestaurant,getAllRestaurant,getByIdRestaurant, createRestaurantCategory, getAllRestaurantCategory,createRestaurantFood,getAllRestaurantFood} = require('../controller/restaurant');
+const {createRestaurant,getAllRestaurant,getByIdRestaurant, createRestaurantCategory, getAllRestaurantCategory,createRestaurantFood,getAllRestaurantFood, deleteRestaurantFood, deleteRestaurantCategory} = require('../controller/restaurant');
 const {verifyJWT} = require('../middleware/authentication');
 const {verifyVendor} = require('../middleware/user');
 const {verifyRestaurantOwner} = require('../middleware/restaurant');
@@ -12,6 +12,9 @@ router.post('/create-restaurant-category',verifyJWT,verifyVendor ,verifyRestaura
 router.get('/get-all-restaurant-category/:id',verifyJWT,getAllRestaurantCategory);
 router.post('/create-restaurant-food', verifyJWT,verifyVendor,verifyRestaurantOwner ,createRestaurantFood);
 router.get('/get-all-restaurant-food/:restaurantId',verifyJWT,getAllRestaurantFood);
+router.delete('/delete-restaurant-food/:id',verifyJWT,verifyRestaurantOwner,deleteRestaurantFood);
+router.delete('/delete-restaurant-category/:id',verifyJWT,verifyRestaurantOwner,deleteRestaurantCategory);
+
 
 
 module.exports = router;

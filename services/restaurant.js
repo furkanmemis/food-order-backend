@@ -232,7 +232,7 @@ const getAllRestaurantFood = async(data) => {
       const restaurant = await Restaurant.findOne({_id:restaurantId}).select("name _id");
       const restaurantCategory = await RestaurantCategory.findOne({_id:restaurantCategoryId}).select("name _id");
 
-      let f = {name,price,restaurant,restaurantCategory};
+      let f = {name,price,restaurant,restaurantCategory,id:food._id};
 
       foods.push(f);
     }
@@ -242,6 +242,53 @@ const getAllRestaurantFood = async(data) => {
   }catch(error){
     throw new Error('Get all restaurant food error '+error.message);
   }
+};
+
+const deleteRestaurantFood = async(id, restaurantId) =>{
+  try{
+
+    const existFood = await RestaurantFood.findOne({_id: id, restaurantId: restaurantId});
+
+    if(!existFood){
+      throw new Error('Any restaurant not found with this id '+id);
+    }
+
+    const deleted = await RestaurantFood.deleteOne({_id:id, restaurantId: restaurantId});
+
+    if(!deleted){
+      throw new Error('Delete food error');
+    }
+
+    return{message: "Success"};
+
+  }catch(error){
+    throw new Error('Delete restaurant food error '+error.message);
+  }
+};
+
+const deleteRestaurantCategory = async(id,restaurantId) => {
+  try{
+
+    if(!id || !restaurantId){
+      throw new Error('Id and restaurandId should be have');
+    }
+
+    const existFood = await RestaurantFood.findOne({restaurantCategoryId: id})
+
+    if(existFood){
+      throw new Error('This category have a food')
+    }
+
+    const item = await RestaurantCategory.deleteOne({_id: id, restaurantId});
+
+    if(!item){
+      throw new Error ('Restaurant category delete error');
+    }
+    return{message: "Success"};
+
+  }catch(error){
+    throw new Error('Delete restaurant category error -> '+error.message);
+  }
 }
 
-module.exports = { create, getAll, getById, createRestaurantCategory, getAllRestaurantCategory, createRestaurantFood, getAllRestaurantFood };
+module.exports = { create, getAll, getById, createRestaurantCategory, getAllRestaurantCategory, createRestaurantFood, getAllRestaurantFood, deleteRestaurantFood, deleteRestaurantCategory };
